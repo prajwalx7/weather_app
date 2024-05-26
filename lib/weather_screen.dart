@@ -1,7 +1,7 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:weather_app/additional_info.dart';
+import 'package:weather_app/small_card_widget.dart';
 
 class WeatherScreen extends StatelessWidget {
   const WeatherScreen({super.key});
@@ -48,11 +48,11 @@ class WeatherScreen extends StatelessWidget {
                               style: TextStyle(fontSize: 32),
                             ),
                             Icon(
-                              Icons.cloud,
+                              Icons.foggy,
                               size: 64,
                             ),
                             Text(
-                              "Cloudy",
+                              "Rain",
                               style: TextStyle(fontSize: 24),
                             )
                           ],
@@ -77,16 +77,20 @@ class WeatherScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    SmallCardWidget(),
-                    SmallCardWidget(),
-                    SmallCardWidget(),
-                    SmallCardWidget(),
-                    SmallCardWidget(),
-                    SmallCardWidget(),
-                    SmallCardWidget(),
-                    SmallCardWidget(),
-                    SmallCardWidget(),
-                    SmallCardWidget(),
+                    SmallCardWidget(
+                        time: '09:00', icon: Icons.cloud, temperature: "30°C"),
+                    SmallCardWidget(
+                        time: '11:00', icon: Icons.sunny, temperature: "32°C"),
+                    SmallCardWidget(
+                        time: '13:00', icon: Icons.sunny, temperature: "29°C"),
+                    SmallCardWidget(
+                        time: '15:00', icon: Icons.foggy, temperature: "26°C"),
+                    SmallCardWidget(
+                        time: '17:00', icon: Icons.cloud, temperature: "24°C"),
+                    SmallCardWidget(
+                        time: '19:00', icon: Icons.sunny, temperature: "20°C"),
+                    SmallCardWidget(
+                        time: '21:00', icon: Icons.cloud, temperature: "18°C"),
                   ],
                 ),
               ),
@@ -98,91 +102,21 @@ class WeatherScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
-                height: 15,
+                height: 20,
               ),
-              Container(
-                padding: EdgeInsets.all(60),
-                child: const Row(
-                  children: [
-                    Column(
-                      children: [
-                        Icon(Icons.water_drop, size: 32),
-                        Text(
-                          "Humidity",
-                          style: TextStyle(fontSize: 22),
-                        ),
-                        Text(
-                          "96",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    Column(
-                      children: [
-                        Icon(Icons.wind_power, size: 32),
-                        Text(
-                          "data",
-                          style: TextStyle(fontSize: 22),
-                        ),
-                        Text(
-                          "9.66",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    Column(
-                      children: [
-                        Icon(Icons.call_received_outlined, size: 32),
-                        Text(
-                          "data",
-                          style: TextStyle(fontSize: 22),
-                        ),
-                        Text(
-                          "1004",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  AdditionalInfoWidget(
+                      icon: Icons.water_drop, text: "Humidity", value: "92"),
+                  AdditionalInfoWidget(
+                      icon: Icons.air, text: "Wind Speed", value: "7.5"),
+                  AdditionalInfoWidget(
+                      icon: Icons.beach_access, text: "Pressure", value: "1002")
+                ],
               )
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class SmallCardWidget extends StatelessWidget {
-  const SmallCardWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        width: 100,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
-        padding: const EdgeInsets.all(8.0),
-        child: const Column(
-          children: [
-            Text(
-              "09:00",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Icon(Icons.sunny),
-            SizedBox(
-              height: 8,
-            ),
-            Text("35°C"),
-          ],
         ),
       ),
     );
