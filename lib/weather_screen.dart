@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:weather_app/additional_info.dart';
-import 'package:weather_app/constant.dart';
+// import 'package:weather_app/constant.dart';
 import 'package:weather_app/small_card_widget.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -13,20 +13,20 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
-  @override
-  void initState() {
-    super.initState();
-    getCurrentWeather();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getCurrentWeather();
+  // }
 
-  Future getCurrentWeather() async {
-    const cityName = 'London';
-    final res = await http.get(
-      Uri.parse(
-          "https://api.openweathermap.org/data/2.5/weather?q=$cityName,uk&APPID=$openWeatherAPIKey"),
-    );
-    print(res.body);
-  }
+  // Future getCurrentWeather() async {
+  //   const cityName = 'London';
+  //   final res = await http.get(
+  //     Uri.parse(
+  //         "https://api.openweathermap.org/data/2.5/weather?q=$cityName,uk&APPID=$openWeatherAPIKey"),
+  //   );
+  //   print(res.body);
+  // }
 
   @override
   Widget build(BuildContext context) {
