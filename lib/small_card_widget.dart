@@ -22,13 +22,13 @@ class SmallCardWidget extends StatelessWidget {
           children: [
             Text(
               time,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Icon(icon),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Text(temperature),
