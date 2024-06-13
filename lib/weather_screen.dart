@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:weather_app/additional_info.dart';
 import 'package:weather_app/constant.dart';
 import 'package:weather_app/small_card_widget.dart';
@@ -14,23 +15,39 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
+  late Future<Map<String, dynamic>> weatherData;
+
   @override
   void initState() {
     super.initState();
-    getCurrentWeather();
+    weatherData = getWeatherData();
   }
 
-  Future<Map<String, dynamic>> getCurrentWeather() async {
+  Future<Map<String, dynamic>> getWeatherData() async {
     const cityName = 'Aurangabad,MH,IN';
-    final res = await http.get(
+    final weatherResponse = await http.get(
       Uri.parse(
           "https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$openWeatherAPIKey&units=metric"),
     );
-    final data = jsonDecode(res.body);
-    if (data['cod'] != 200) {
+    final forecastResponse = await http.get(
+      Uri.parse(
+          "https://api.openweathermap.org/data/2.5/forecast?q=$cityName&appid=$openWeatherAPIKey&units=metric"),
+    );
+
+    if (weatherResponse.statusCode != 200 ||
+        forecastResponse.statusCode != 200) {
       throw 'An unexpected error occurred';
     }
-    return data;
+
+    final weatherData = jsonDecode(weatherResponse.body);
+    final forecastData = jsonDecode(forecastResponse.body);
+
+    return {'weather': weatherData, 'forecast': forecastData};
+  }
+
+  String formatDateTime(String dateTime) {
+    final parsedDateTime = DateTime.parse(dateTime);
+    return DateFormat('d MMM').format(parsedDateTime);
   }
 
   @override
@@ -43,7 +60,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           IconButton(
             onPressed: () {
               setState(() {
-                getCurrentWeather();
+                weatherData = getWeatherData();
               });
             },
             icon: const Icon(Icons.refresh),
@@ -51,7 +68,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
         ],
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: getCurrentWeather(),
+        future: weatherData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -68,12 +85,22 @@ class _WeatherScreenState extends State<WeatherScreen> {
             );
           }
 
+          if (!snapshot.hasData || snapshot.data == null) {
+            return const Center(
+              child: Text('No data available'),
+            );
+          }
+
           final data = snapshot.data!;
-          final currentTemp = data['main']['temp'];
-          final weatherDescription = data['weather'][0]['description'];
-          final currentPressure = data['main']['pressure'];
-          final currentHumidity = data['main']['humidity'];
-          final currentSpeed = data['wind']['speed'];
+          final weather = data['weather'];
+          final forecast = data['forecast'];
+          final currentTemp =
+              weather['main']['temp'].toInt(); 
+          final weatherDescription = weather['weather'][0]['description'];
+          final currentPressure = weather['main']['pressure'];
+          final currentHumidity = weather['main']['humidity'];
+          final currentSpeed = weather['wind']['speed'];
+
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -123,39 +150,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                const SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
+                SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      SmallCardWidget(
-                          time: '09:00',
+                      for (int i = 0; i < 5; i++)
+                        SmallCardWidget(
+                          time:
+                              formatDateTime(forecast['list'][i * 8]['dt_txt']),
                           icon: Icons.cloud,
-                          temperature: "30°C"),
-                      SmallCardWidget(
-                          time: '11:00',
-                          icon: Icons.sunny,
-                          temperature: "32°C"),
-                      SmallCardWidget(
-                          time: '13:00',
-                          icon: Icons.sunny,
-                          temperature: "29°C"),
-                      SmallCardWidget(
-                          time: '15:00',
-                          icon: Icons.foggy,
-                          temperature: "26°C"),
-                      SmallCardWidget(
-                          time: '17:00',
-                          icon: Icons.cloud,
-                          temperature: "24°C"),
-                      SmallCardWidget(
-                          time: '19:00',
-                          icon: Icons.sunny,
-                          temperature: "20°C"),
-                      SmallCardWidget(
-                          time: '21:00',
-                          icon: Icons.cloud,
-                          temperature: "18°C"),
+                          temperature:
+                              "${forecast['list'][i * 8]['main']['temp'].toInt()} °C",
+                        ),
                     ],
                   ),
                 ),
