@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/additional_info.dart';
 import 'package:weather_app/constant.dart';
@@ -50,6 +51,43 @@ class _WeatherScreenState extends State<WeatherScreen> {
     return DateFormat('d MMM').format(parsedDateTime);
   }
 
+  IconData getWeatherIcon(String iconCode) {
+    // Example mapping for Iconsax icons based on OpenWeatherMap icon codes
+    switch (iconCode) {
+      case '01d': // clear sky day
+        return Iconsax.sun_15;
+      case '01n': // clear sky night
+        return Iconsax.cloud5;
+      case '02d': // few clouds day
+        return Iconsax.cloud_lightning;
+      case '02n': // few clouds night
+        return Iconsax.cloud_sunny5;
+      case '03d': // scattered clouds day
+      case '03n': // scattered clouds night
+        return Iconsax.cloud5;
+      case '04d': // broken clouds day
+      case '04n': // broken clouds night
+        return Iconsax.cloud_snow;
+      case '09d': // shower rain day
+      case '09n': // shower rain night
+        return Iconsax.cloud_drizzle;
+      case '10d': // rain day
+      case '10n': // rain night
+        return Iconsax.cloud5;
+      case '11d': // thunderstorm day
+      case '11n': // thunderstorm night
+        return Iconsax.cloud_lightning;
+      case '13d': // snow day
+      case '13n': // snow night
+        return Iconsax.cloud_snow;
+      case '50d': // mist day
+      case '50n': // mist night
+        return Iconsax.cloud_fog;
+      default:
+        return Iconsax.cloud5;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,9 +132,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
           final data = snapshot.data!;
           final weather = data['weather'];
           final forecast = data['forecast'];
-          final currentTemp =
-              weather['main']['temp'].toInt(); 
+          final currentTemp = weather['main']['temp'].toInt();
           final weatherDescription = weather['weather'][0]['description'];
+          final weatherIconCode = weather['weather'][0]['icon'];
           final currentPressure = weather['main']['pressure'];
           final currentHumidity = weather['main']['humidity'];
           final currentSpeed = weather['wind']['speed'];
@@ -125,8 +163,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 "$currentTemp °C",
                                 style: const TextStyle(fontSize: 32),
                               ),
-                              const Icon(
-                                Icons.foggy,
+                              Icon(
+                                getWeatherIcon(weatherIconCode),
                                 size: 64,
                               ),
                               Text(
@@ -150,20 +188,25 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      for (int i = 0; i < 5; i++)
-                        SmallCardWidget(
-                          time:
-                              formatDateTime(forecast['list'][i * 8]['dt_txt']),
-                          icon: Icons.cloud,
-                          temperature:
-                              "${forecast['list'][i * 8]['main']['temp'].toInt()} °C",
-                        ),
-                    ],
+                SizedBox(
+                  height: 120,
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 10,
+                    itemBuilder: (context, index) {
+                      final hourlyData = forecast['list'][index * 3];
+                      final hourlyTime = formatDateTime(hourlyData['dt_txt']);
+                      final hourlyTemp = hourlyData['main']['temp'].toInt();
+                      final hourlyWeatherIconCode =
+                          hourlyData['weather'][0]['icon'];
+
+                      return SmallCardWidget(
+                        time: hourlyTime,
+                        icon: getWeatherIcon(hourlyWeatherIconCode),
+                        temperature: "$hourlyTemp °C",
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(
@@ -180,15 +223,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     AdditionalInfoWidget(
-                        icon: Icons.water_drop,
+                        icon: Icons.water_drop_outlined,
                         text: "Humidity",
                         value: currentHumidity.toString()),
                     AdditionalInfoWidget(
-                        icon: Icons.air,
+                        icon: Iconsax.wind,
                         text: "Wind Speed",
                         value: currentSpeed.toString()),
                     AdditionalInfoWidget(
-                        icon: Icons.beach_access,
+                        icon: Iconsax.weight,
                         text: "Pressure",
                         value: currentPressure.toString())
                   ],
