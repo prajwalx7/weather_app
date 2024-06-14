@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/additional_info.dart';
@@ -42,6 +43,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
     final weatherData = jsonDecode(weatherResponse.body);
     final forecastData = jsonDecode(forecastResponse.body);
+
+    // print("Current wather Data: $weatherData");
+    // print("forecast : $forecastData");
 
     return {'weather': weatherData, 'forecast': forecastData};
   }
@@ -91,8 +95,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffEEEEEE),
       appBar: AppBar(
-        title: const Text("Weather App"),
+        backgroundColor: const Color(0xffEEEEEE),
+        title: const Text(
+          "Weather App",
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -101,7 +110,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 weatherData = getWeatherData();
               });
             },
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(
+              Iconsax.refresh,
+              color: Colors.black,
+            ),
           ),
         ],
       ),
@@ -111,7 +123,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(
-                color: Colors.white,
+                color: Colors.black,
               ),
             );
           }
@@ -153,26 +165,23 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                "$currentTemp °C",
-                                style: const TextStyle(fontSize: 32),
-                              ),
-                              Icon(
-                                getWeatherIcon(weatherIconCode),
-                                size: 64,
-                              ),
-                              Text(
-                                weatherDescription,
-                                style: const TextStyle(fontSize: 24),
-                              )
-                            ],
-                          ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              "$currentTemp °C",
+                              style: const TextStyle(fontSize: 32),
+                            ),
+                            Icon(
+                              getWeatherIcon(weatherIconCode),
+                              size: 64,
+                            ),
+                            Text(
+                              weatherDescription,
+                              style: const TextStyle(fontSize: 24),
+                            )
+                          ],
                         ),
                       ),
                     ),
@@ -183,7 +192,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 ),
                 const Text(
                   "Weather Forecast",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
                   height: 15,
@@ -214,27 +226,37 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 ),
                 const Text(
                   "Additional Information",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    AdditionalInfoWidget(
-                        icon: Icons.water_drop_outlined,
-                        text: "Humidity",
-                        value: currentHumidity.toString()),
-                    AdditionalInfoWidget(
-                        icon: Iconsax.wind,
-                        text: "Wind Speed",
-                        value: currentSpeed.toString()),
-                    AdditionalInfoWidget(
-                        icon: Iconsax.weight,
-                        text: "Pressure",
-                        value: currentPressure.toString())
-                  ],
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.black,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      AdditionalInfoWidget(
+                          icon: Icons.water_drop_outlined,
+                          text: "Humidity",
+                          value: currentHumidity.toString()),
+                      AdditionalInfoWidget(
+                          icon: Iconsax.wind,
+                          text: "Wind Speed",
+                          value: currentSpeed.toString()),
+                      AdditionalInfoWidget(
+                          icon: Iconsax.weight,
+                          text: "Pressure",
+                          value: currentPressure.toString())
+                    ],
+                  ),
                 )
               ],
             ),
