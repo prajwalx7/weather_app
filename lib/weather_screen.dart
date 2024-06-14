@@ -95,9 +95,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffEEEEEE),
+      backgroundColor: const Color(0xffD0D4CA),
       appBar: AppBar(
-        backgroundColor: const Color(0xffEEEEEE),
+        backgroundColor: const Color(0xffD0D4CA),
         title: const Text(
           "Weather App",
           style: TextStyle(color: Colors.black),
@@ -159,6 +159,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: Card(
+                    color: const Color(0xff222831),
                     elevation: 10,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -238,7 +239,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    color: Colors.black,
+                    color: const Color(0xff222831),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,

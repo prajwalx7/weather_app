@@ -16,7 +16,10 @@ class SmallCardWidget extends StatelessWidget {
     return Card(
       child: Container(
         width: 100,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: const Color(0xff222831),
+        ),
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
